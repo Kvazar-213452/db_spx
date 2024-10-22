@@ -2,21 +2,13 @@ package main
 
 import (
 	"fmt"
+	func_db "head/func_com"
 	"net/http"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Метод не дозволено", http.StatusMethodNotAllowed)
-		return
-	}
-}
-
 func main() {
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/check", func_db.Check_db)
 
+	http.ListenAndServe(":8080", nil)
 	fmt.Println("Сервер запущено на http://localhost:8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		fmt.Println("Помилка при запуску сервера:", err)
-	}
 }
