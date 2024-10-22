@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 )
 
 func Check_db(w http.ResponseWriter, r *http.Request) {
@@ -99,4 +100,8 @@ func Del_all_data_db(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "good")
+}
+
+func Off(w http.ResponseWriter, r *http.Request) {
+	os.Exit(0)
 }
