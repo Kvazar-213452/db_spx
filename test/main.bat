@@ -1,1 +1,1 @@
-curl -X POST "http://localhost:8080/del?key=value1"
+curl -X POST "http://localhost:8080/del_db

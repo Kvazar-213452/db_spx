@@ -29,12 +29,12 @@ func Check_server(w http.ResponseWriter, r *http.Request) {
 }
 
 func Add_db(w http.ResponseWriter, r *http.Request) {
-	key1 := r.URL.Query().Get("key1")
-	key2 := r.URL.Query().Get("key2")
+	key1 := r.URL.Query().Get("key")
+	key2 := r.URL.Query().Get("key1")
 
-	data, err := ioutil.ReadFile("main.json")
+	data, err := ioutil.ReadFile(Data_db)
 	if err != nil {
-		http.Error(w, "Не вдалося прочитати файл", http.StatusInternalServerError)
+		http.Error(w, "erorr", http.StatusInternalServerError)
 		return
 	}
 
@@ -50,7 +50,7 @@ func Add_db(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ioutil.WriteFile("main.json", updatedData, 0644)
+	ioutil.WriteFile(Data_db, updatedData, 0644)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -58,16 +58,11 @@ func Add_db(w http.ResponseWriter, r *http.Request) {
 }
 
 func Del_data_db(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Метод не дозволено", http.StatusMethodNotAllowed)
-		return
-	}
-
 	key := r.URL.Query().Get("key")
 
-	data, err := ioutil.ReadFile("main.json")
+	data, err := ioutil.ReadFile(Data_db)
 	if err != nil {
-		http.Error(w, "Не вдалося прочитати файл", http.StatusInternalServerError)
+		http.Error(w, "erorr", http.StatusInternalServerError)
 		return
 	}
 
@@ -79,11 +74,27 @@ func Del_data_db(w http.ResponseWriter, r *http.Request) {
 
 	updatedData, err := json.MarshalIndent(jsonData, "", "    ")
 	if err != nil {
+		http.Error(w, "erorr", http.StatusInternalServerError)
+		return
+	}
+
+	ioutil.WriteFile(Data_db, updatedData, 0644)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "good")
+}
+
+func Del_all_data_db(w http.ResponseWriter, r *http.Request) {
+	emptyData := make(map[string]string)
+
+	updatedData, err := json.MarshalIndent(emptyData, "", "    ")
+	if err != nil {
 		http.Error(w, "Помилка при формуванні JSON", http.StatusInternalServerError)
 		return
 	}
 
-	ioutil.WriteFile("main.json", updatedData, 0644)
+	ioutil.WriteFile(Data_db, updatedData, 0644)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
